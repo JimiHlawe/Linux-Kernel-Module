@@ -1,0 +1,52 @@
+--- a/drivers/Kconfig
++++ b/drivers/Kconfig
+@@ -245,4 +245,6 @@
+ 
+ source "drivers/dpll/Kconfig"
+ 
++source "drivers/mymod/Kconfig"
++
+ endmenu
+--- a/drivers/Makefile
++++ b/drivers/Makefile
+@@ -195,3 +195,4 @@
+ obj-$(CONFIG_DPLL)		+= dpll/
+ 
+ obj-$(CONFIG_S390)		+= s390/
++obj-$(CONFIG_MYMOD) += mymod/
+--- /dev/null
++++ b/drivers/mymod/Kconfig
+@@ -0,0 +1,6 @@
++
++config MYMOD
++    tristate "My simple kernel module"
++    help
++      Simple module that prints Hello World
++      when loaded and Bye Bye World when removed.
+--- /dev/null
++++ b/drivers/mymod/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_MYMOD) += mymod.o
+--- /dev/null
++++ b/drivers/mymod/mymod.c
+@@ -0,0 +1,20 @@
++
++#include <linux/module.h>
++#include <linux/init.h>
++
++static int __init mymod_init(void)
++{
++    printk(KERN_INFO "Hello World\n");
++    return 0;
++}
++
++static void __exit mymod_exit(void)
++{
++    printk(KERN_INFO "Bye Bye World\n");
++}
++
++module_init(mymod_init);
++module_exit(mymod_exit);
++
++MODULE_LICENSE("GPL");
++
